@@ -4,6 +4,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import connectDB from './src/config/db.js';
 import budgetRoutes from './src/routes/budgetRoutes.js'
+import procedureRouter from './src/routes/procedureRoutes.js';
 
 dotenv.config();
 const app = express();
@@ -23,6 +24,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/budgets', budgetRoutes);
+app.use('/api/procedure', procedureRouter);
 
 export default app;
 
