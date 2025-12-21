@@ -1,5 +1,5 @@
 import express from 'express';
-import { createProcedure, getProcedures } from '../controllers/procedureController';
+import { createProcedure, getProcedures } from '../controllers/procedureController.js';
 
 const router = express.Router();
 

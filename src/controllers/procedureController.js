@@ -1,4 +1,4 @@
-import Procedure from "../models/Procedure";
+import Procedure from "../models/Procedure.js";
 
 // CREATE
 export const createProcedure = async (req, res) => {
