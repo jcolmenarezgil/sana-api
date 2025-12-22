@@ -1,6 +1,20 @@
 import Budget from '../models/Budget.js';
 import Procedure from '../models/Procedure.js';
 
+//GET
+export const getBudgets = async (req, res) => {
+    try {
+        // Populate busca en la coleccion 'Procedures' los datos de los IDS guardados
+        const budgets = await Budgets.find()
+            .populate('items.procedure_id', 'name code');
+        
+        res.status(200).json(budgets);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+//POST
 export const createBudget = async (req, res) => {
     try {
         const { patient_name, selected_procedures } = req.body; // TODO: selected_procedures será un array de objetos: [{ id: "...", price: 100 }]
