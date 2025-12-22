@@ -5,7 +5,7 @@ import Procedure from '../models/Procedure.js';
 export const getBudgets = async (req, res) => {
     try {
         // Populate busca en la coleccion 'Procedures' los datos de los IDS guardados
-        const budgets = await Budgets.find()
+        const budgets = await Budget.find()
             .populate('items.procedure_id', 'name code');
         
         res.status(200).json(budgets);
