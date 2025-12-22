@@ -19,6 +19,9 @@ export const createBudget = async (req, res) => {
 
         }));
 
+        // calculamos el total_amount
+        const total_amount = items.reduce((sum, item) => sum + item.price, 0);
+
         // guardar el presupuesto
         const newBudget = new Budget({
             patient_name,
