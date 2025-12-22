@@ -7,6 +7,21 @@ export const getBudgets = async (req, res) => {
     try {
         // Populate busca en la coleccion 'Procedures' los datos de los IDS guardados
         const budgets = await Budget.find()
+            .populate('patient_id', 'firstName LastName dni')
+            .populate('items.procedure_id', 'name code');
+        
+        res.status(200).json(budgets);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+//GET BY
+export const getBudgetsByPatient = async (req, res) => {
+    try {
+        const { patient_id } = req.params;
+
+        const budgets = await Budget.find({ patient_id })
             .populate('items.procedure_id', 'name code');
         
         res.status(200).json(budgets);
