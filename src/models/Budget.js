@@ -1,7 +1,7 @@
 import mongoose, { Types } from "mongoose";
 
 const budgetSchema = new mongoose.Schema({
-    patient_name: { type: String, required: true }, // TODO: temporalmente string hasta que tengamos el modelo Patient
+    patient_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true },
     title: { type: String },
     items: [{
         procedure_id: {

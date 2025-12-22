@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import connectDB from './src/config/db.js';
 import budgetRoutes from './src/routes/budgetRoutes.js'
 import procedureRouter from './src/routes/procedureRoutes.js';
+import patientRouter from './src/routes/patientRoutes.js';
 
 dotenv.config();
 const app = express();
@@ -23,6 +24,7 @@ app.get('/', (req, res) => {
     res.json({ message: "Welcome SANA Api" });
 });
 
+app.use('/api/patients', patientRouter);
 app.use('/api/budgets', budgetRoutes);
 app.use('/api/procedure', procedureRouter);
 

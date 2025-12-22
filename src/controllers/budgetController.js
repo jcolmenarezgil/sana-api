@@ -1,4 +1,5 @@
 import Budget from '../models/Budget.js';
+import Patient from '../models/Patient.js';
 import Procedure from '../models/Procedure.js';
 
 //GET
@@ -17,7 +18,11 @@ export const getBudgets = async (req, res) => {
 //POST
 export const createBudget = async (req, res) => {
     try {
-        const { patient_name, selected_procedures } = req.body; // TODO: selected_procedures será un array de objetos: [{ id: "...", price: 100 }]
+        const { patient_id, selected_procedures } = req.body; // TODO: selected_procedures será un array de objetos: [{ id: "...", price: 100 }]
+
+        // buscamos al paciente para verificar que existe
+        const patient = await Patient.findById(patient_id);
+        if (!patient) return res.status(404).json({ message: 'Patient ' })
 
         // extraer ids para busqueda
         const ids = selected_procedures.map(p => p.id);
@@ -38,7 +43,7 @@ export const createBudget = async (req, res) => {
 
         // guardar el presupuesto
         const newBudget = new Budget({
-            patient_name,
+            patient_id,
             title,
             items,
             total_amount
