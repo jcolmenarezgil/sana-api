@@ -8,7 +8,8 @@ export const getBudgets = async (req, res) => {
         // Populate busca en la coleccion 'Procedures' los datos de los IDS guardados
         const budgets = await Budget.find()
             .populate('patient_id', 'firstName LastName dni')
-            .populate('items.procedure_id', 'name code');
+            .populate('items.procedure_id', 'name code')
+            .populate('payments');
         
         res.status(200).json(budgets);
     } catch (error) {
