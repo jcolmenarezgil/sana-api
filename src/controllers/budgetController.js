@@ -23,7 +23,11 @@ export const getBudgetsByPatient = async (req, res) => {
         const { patient_id } = req.params;
 
         const budgets = await Budget.find({ patient_id })
-            .populate('items.procedure_id', 'name code');
+            .populate('items.procedure_id', 'name code')
+            .populate({
+                path: 'payments',
+                select: 'amount payable_type'
+            })
         
         res.status(200).json(budgets);
     } catch (error) {
