@@ -76,3 +76,21 @@ export const createBudget = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 }
+
+// PUT 
+export const updateBudgetStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        const updateBudget = await Budget.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true }
+        ).populate('payments');
+
+        res.status(200).json(updateBudget);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};

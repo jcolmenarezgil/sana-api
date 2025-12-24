@@ -25,6 +25,18 @@ export const createPayment = async (req, res) => {
 
         const savedPayment = await newPayment.save();
 
+        if (payable_type === 'Budget') {
+            const budget = await Budget.findById(payable_id).populate('payments');
+
+            let newStatus = 'ACCEPTED';
+
+            if (budget.balance_due <= 0) {
+                newStatus = 'PAID';
+            }
+
+            await Budget.findByIdAndUpdate(payable_id, { status: newStatus });
+        }
+
         // Preparar la respuesta con datos del paciente
         const response = await savedPayment.populate('patient_id', 'firstName lastName');
 
