@@ -30,9 +30,23 @@ app.use('/api/budgets', budgetRoutes);
 app.use('/api/procedure', procedureRouter);
 app.use('/api/payments', paymentRoutes);
 
+// Manejo de errores 400
+app.use((req, res, next) => {
+    res.status(404).json({ message: "La ruta solicitada no existe." });
+});
+
+// Manejo de erorres 500
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({
+        message: "Ocurrió un error inesperado en el servidor",
+        error: process.env.NODE_ENV === 'development' ? err.message : {}
+    });
+});
+
 export default app;
 
-    const port = process.env.PORT || 3000;
-    app.listen(port, () => {
-        console.log(`Server is Running at port ${port}`);
-    });
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Server is Running at port ${port}`);
+});
