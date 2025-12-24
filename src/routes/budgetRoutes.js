@@ -12,4 +12,10 @@ router.get('/patient/:patient_id', getBudgetsByPatient);
 // PUT
 router.patch('/:id/status', updateBudgetStatus);
 
+// Ejemplo: Si tuvieras una ruta para editar los items del presupuesto
+//router.put('/:id', protectPaidBudget, updateBudgetItems);
+
+// También podrías proteger el borrado
+//router.delete('/:id', protectPaidBudget, deleteBudget);
+
 export default router;
