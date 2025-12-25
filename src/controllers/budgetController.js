@@ -83,13 +83,37 @@ export const updateBudgetStatus = async (req, res) => {
         const { id } = req.params;
         const { status } = req.body;
 
-        const updateBudget = await Budget.findByIdAndUpdate(
+        // Ubicamos el balance del presupuesto actual
+        const budget = await Budget.findById(id).populate('payments');
+
+        if (!budget) {
+            return res.status(404).json({ message: "Presupuesto no encontrado" });
+        }
+
+        // Validación de integridad: No rechazar si tiene pagos registrados
+        if (status === 'REJECTED' && budget.total_paid > 0) {
+            return res.status(400).json({
+                message: "Inconsistencia detectada",
+                details: `No se puede marcar como REJECTED un presupuesto que tiene abonos (Total pagado: ${budget.total_paid} )`
+            });
+        }
+
+        // Actualizar estado a pagado con balance (deuda) en 0
+        let finalStatus = status;
+
+        if (budget.balance_due <= 0) {
+            finalStatus = 'PAID';
+        }
+
+        // Si las condiciones anteriores son correctas, Actualizar
+        const updatedBudget = await Budget.findByIdAndUpdate(
             id,
             { status },
             { new: true }
         ).populate('payments');
 
-        res.status(200).json(updateBudget);
+        res.status(200).json(updatedBudget);
+
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
