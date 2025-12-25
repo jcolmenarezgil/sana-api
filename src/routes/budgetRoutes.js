@@ -1,5 +1,6 @@
 import express from 'express';
 import { createBudget, getBudgets, getBudgetsByPatient, updateBudgetStatus } from '../controllers/budgetController.js';
+import { validateBudgetUpdate } from '../middlewares/requestValidator.js';
 
 const router = express.Router();
 
@@ -9,8 +10,8 @@ router.post('/', createBudget);
 // GET BY /api/budgets/patient/ID_DEL_PACIENTE
 router.get('/patient/:patient_id', getBudgetsByPatient);
 
-// PUT
-router.patch('/:id/status', updateBudgetStatus);
+// PATCH
+router.patch('/:id/status', validateBudgetUpdate, updateBudgetStatus);
 
 // Ejemplo: Si tuvieras una ruta para editar los items del presupuesto
 //router.put('/:id', protectPaidBudget, updateBudgetItems);
