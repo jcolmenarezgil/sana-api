@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const consultationSchema = new mongoose.Schema({
-    patientui_id: {
+    patient_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Patient',
         required: true
