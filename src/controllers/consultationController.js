@@ -1,4 +1,4 @@
-import Consultation from "../models/Consultation";
+import Consultation from "../models/Consultation.js";
 
 export const createConsultation = async (req, res) => {
     try {

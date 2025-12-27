@@ -1,7 +1,7 @@
 import express from 'express';
-import { createConsultation, getPatientHistory } from '../controllers/consultationController';
-import { consultationSchema } from '../validators/consultationValidator';
-import { validateSchema } from '../middlewares/schemaValidator';
+import { createConsultation, getPatientHistory } from '../controllers/consultationController.js';
+import { consultationSchema } from '../validators/consultationValidator.js';
+import { validateSchema } from '../middlewares/schemaValidator.js';
 
 const router = express.Router();
 
