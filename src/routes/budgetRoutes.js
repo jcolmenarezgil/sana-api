@@ -1,4 +1,5 @@
 import express from 'express';
+import Joi from 'joi';
 import { createBudget, getBudgets, getBudgetsByPatient, updateBudgetStatus } from '../controllers/budgetController.js';
 import { budgetSchema } from '../validators/budgetValidator.js';
 import { validateSchema } from '../middlewares/schemaValidator.js';
