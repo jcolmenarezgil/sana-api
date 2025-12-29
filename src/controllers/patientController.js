@@ -34,7 +34,7 @@ export const getFullPatientHistory = async (req, res) => {
             Prescription.find({ patient_id: id })
                 .populate('medication.medicine_id', 'name generic_name')
                 .sort({ date_issued: -1 }),
-            Budget.find({ patiend_id: id }).sort({ createAt: -1 })
+            Budget.find({ patient_id: id }).sort({ createdAt: -1 })
         ]);
 
         if (!patient) {
