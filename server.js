@@ -9,6 +9,7 @@ import patientRouter from './src/routes/patientRoutes.js';
 import paymentRoutes from './src/routes/paymentRoutes.js';
 import consultationRoutes from './src/routes/consultationRoutes.js';
 import medicineRoutes from './src/routes/medicineRoutes.js';
+import prescriptionRoutes from './src/routes/prescriptionRoutes.js';
 
 dotenv.config();
 const app = express();
@@ -33,6 +34,7 @@ app.use('/api/procedure', procedureRouter);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/consultations', consultationRoutes);
 app.use('/api/medicines/', medicineRoutes);
+app.use('/api/prescriptions', prescriptionRoutes);
 
 // Manejo de errores 400
 app.use((req, res, next) => {
