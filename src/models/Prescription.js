@@ -17,9 +17,9 @@ const prescriptionSchema = new mongoose.Schema({
             ref: 'Medicine',
             required: true
         },
-        dosage_form: { type: String, required: true },      // Tableta 500mg
-        schedule: { type: String, required: true },         // Cada 8 Horas
-        instructions: { type: String }                      // Tomar después de cada comida.
+        custom_dosage: { type: String },
+        custom_schedule: { type: String },
+        custom_instructions: { type: String }
     }]
 }, {
     timestamps: true,
