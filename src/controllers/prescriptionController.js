@@ -3,10 +3,10 @@ import Medicine from '../models/Medicine.js';
 
 export const createPrescription = async (req, res) => {
     try {
-        const { patient_id, related_procedures, medications } = req.body;
+        const { patient_id, related_procedures, medication } = req.body;
 
         // Procesamos cada medicamento para aplicar los valores por defecto (si es necesario)
-        const processedMedications = await Promise.all(medications.map(async (item) => {
+        const processedMedication = await Promise.all(medication.map(async (item) => {
             const medicineBase = await Medicine.findById(item.medicine_id);
 
             if (!medicineBase) {
@@ -16,16 +16,16 @@ export const createPrescription = async (req, res) => {
             return {
                 medicine_id: item.medicine_id,
                 // Si el médico envía un dato personalizado lo usamos, si no, usamos el de Medicine (por defecto)
-                dosage_form: item.custom_dosage || medicineBase.default_dosage,
-                schedule: item.custom_schedule || medicineBase.default_schedule,
-                instructions: item.custom_instructions || medicineBase.default_instructions
+                custom_dosage_form: item.custom_dosage || medicineBase.default_dosage,
+                custom_schedule: item.custom_schedule || medicineBase.default_schedule,
+                custom_instructions: item.custom_instructions || medicineBase.default_instructions
             };
         }));
 
         const newPrescription = new Prescription({
             patient_id,
             related_procedures,
-            medications: processedMedications
+            medication: processedMedication
         });
 
         const saved = await newPrescription.save();
@@ -33,7 +33,7 @@ export const createPrescription = async (req, res) => {
         // Retornamos la receta populada para ver los nombres de las medicinas de inmediato
         const populated = await Prescription.findById(saved._id)
             .populate('patient_id', 'firstName lastName dni birthDate')
-            .populate('medications.medicine_id', 'name generic_name');
+            .populate('medication.medicine_id', 'name generic_name default_dosage');
         
         res.status(201).json(populated);
     } catch (error) {
