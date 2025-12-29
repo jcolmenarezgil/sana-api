@@ -1,5 +1,5 @@
 import express from 'express';
-import { createPrescription, getPrescriptions } from '../controllers/prescriptionController';
+import { createPrescription, getPrescriptions } from '../controllers/prescriptionController.js';
 import { prescriptionSchema } from '../validators/prescriptionValidator.js';
 import { validateSchema } from '../middlewares/schemaValidator.js';
 
