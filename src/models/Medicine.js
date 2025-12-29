@@ -13,16 +13,20 @@ const medicineSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Protección antes de eliminar
-medicineSchema.pre('findOneAndDelete', async function (next) {
+medicineSchema.pre('findOneAndDelete', async function () {
+    // Obtenemos el ID del filtro de la consulta
     const medicineId = this.getQuery()._id;
+    
+    // Accedemos al modelo de Prescripción
     const Prescription = mongoose.model('Prescription');
-    const isUsed = await Prescription.findOne({ "medications.medicine_id": medicineId });
+
+    // Buscamos si existe alguna receta con esta medicina
+    const isUsed = await Prescription.findOne({ "medication.medicine_id": medicineId });
 
     if (isUsed) {
-        const error = new Error('No se puede eliminar: Esta medicina está vinculada a recetas existentes.');
-        return next(error);
+        // En lugar de next(error), lanzamos el error directamente
+        throw new Error('No se puede eliminar: Esta medicina está vinculada a recetas existentes.');
     }
-    next();
 });
 
 export default mongoose.model('Medicine', medicineSchema);
