@@ -32,6 +32,7 @@ export const getFullPatientHistory = async (req, res) => {
             Patient.findById(id),
             Consultation.find({ patient_id: id }).sort({ date: -1 }),
             Prescription.find({ patient_id: id })
+                .populate('patient_id', 'birthDate')
                 .populate('medication.medicine_id', 'name generic_name')
                 .sort({ date_issued: -1 }),
             Budget.find({ patient_id: id }).sort({ createdAt: -1 })
