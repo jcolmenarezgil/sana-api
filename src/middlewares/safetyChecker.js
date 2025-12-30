@@ -1,4 +1,3 @@
-import Patient from '../models/Patient.js';
 import Medicine from '../models/Medicine.js';
 import Consultation from '../models/Consultation.js';
 
@@ -8,7 +7,9 @@ export const checkClinicalSafety = async (req, res, next) => {
 
         // Obtenemos todo el historial de notas del paciente (Consultas)
         const consultations = await Consultation.find({ patient_id });
-        const allNotes = consultations.map(c => c.notes.toLowerCase()).join(" ");
+        const allNotes = consultations
+            .map(c => c.notes.toLowerCase())
+            .join(" ");
 
         // Revisamos cada medicina de la nueva receta
         for (let item of medication) {
@@ -17,11 +18,11 @@ export const checkClinicalSafety = async (req, res, next) => {
             if (medicine && medicine.contraindicated) {
                 const warningTerm = medicine.contraindicated.toLocaleLowerCase();
 
-                // Si la palabra de contraindicación aparece en las notas médicas
-                if (allNotes.includes(warningTerm)) {
+                // Verificamos si el término de contraindicación está en las notas
+                if (allNotes.includes(warningTerm) || warningTerm.split[" "].some(word => word.length > 3 && allNotes.includes(word))) {
                     return res.status(403).json({
                         message: "BLOQUEO DE SEGURIDAD MÉDICA",
-                        details: `El medica,ento ${medicine.name} está contraindicado. El historial indica: "${medicine.contraindicated}"`
+                        details: `RIESGO: El medicamento ${medicine.name.toLowerCase()} está contraindicado por "${medicine.contraindicated}".`
                     });
                 }
             }
