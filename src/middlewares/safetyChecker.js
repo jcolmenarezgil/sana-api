@@ -19,7 +19,7 @@ export const checkClinicalSafety = async (req, res, next) => {
                 const warningTerm = medicine.contraindicated.toLocaleLowerCase();
 
                 // Verificamos si el término de contraindicación está en las notas
-                if (allNotes.includes(warningTerm) || warningTerm.split[" "].some(word => word.length > 3 && allNotes.includes(word))) {
+                if (allNotes.includes(warningTerm) || warningTerm.split(" ").some(word => word.length > 3 && allNotes.includes(word))) {
                     return res.status(403).json({
                         message: "BLOQUEO DE SEGURIDAD MÉDICA",
                         details: `RIESGO: El medicamento ${medicine.name.toLowerCase()} está contraindicado por "${medicine.contraindicated}".`
