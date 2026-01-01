@@ -7,9 +7,22 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     role: {
         type: String,
-        enum: ['DOCTOR', 'ADMIN', 'RECEPTIONIST'],
-        default: 'DOCTOR'
-    }
+        enum: ['SPECIALIST', 'ASSISTANT', 'PATIENT', 'ADMIN'],
+        default: 'SPECIALIST'
+    },
+
+    // Si el role es PATIENT, vinculamos a su registro médico
+    patient_reference: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Patient',
+        required: function () { return this.role === 'PATIENT'; }
+    },
+
+    // Para el caso de asistentes o especialistas que colaboran
+    granted_access_to: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User' // Medicos o pacientes que le han otorgado permiso
+    }]
 }, { timestamps: true });
 
 // Encriptar contraseña antes de guardarla
