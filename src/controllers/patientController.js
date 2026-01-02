@@ -1,14 +1,56 @@
 import Patient from '../models/Patient.js';
+import User from '../models/User.js';
 import Consultation from '../models/Consultation.js';
 import Prescription from '../models/Prescription.js';
 import Budget from '../models/Budget.js';
+import mongoose from 'mongoose';
 
 export const createPatient = async (req, res) => {
+    // Usamos una sesión para asegurar que si algo falla, no se cree ni el paciente ni el usuario
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
     try {
-        const patient = new Patient(req.body);
-        await patient.save();
-        res.status(201).json(patient);
+        const { firstName, lastName, dni, birthDate, gender, phone } = req.body;
+
+        // Crear el registro clínico del Paciente
+        const newPatient = new Patient({
+            firstName, lastName, dni, email, birthDate, gender, phone
+        });
+        const savedPatient = await newPatient.save({ session });
+
+        // Crear el usuario de acceso para el Paciente
+        const newUser = new User({
+            name: `${firstName} ${lastName}`,
+            email: email.toLowerCase(),
+            password: dni, // la contraseña por defecto será el dni, TODO indicar mediante email para que la cambie
+            role: 'PATIENT',
+            patient_reference: savedPatient._id
+        });
+        await newUser.save({ session });
+
+        // Vincular este paciente al Especialista que lo está creando
+        const specialistId = req.user.id;
+        await User.findByIdAndUpdate(
+            specialistId,
+            { $addToSet: { granted_access_to: savedPatient._id } },
+            { session }
+        );
+        await session.commitTransaction();
+        session.endSession();
+    
+        res.status(201).json({
+            message: 'Paciente y Usuario creados correctamente',
+            patient: savedPatient,
+            access: {
+                user_email: newUser.email,
+                temporary_password: 'Su número de DNI'
+            }
+        });
     } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
+        
         res.status(400).json({ message: error.message });
     }
 };

@@ -11,14 +11,18 @@ const userSchema = new mongoose.Schema({
         default: 'SPECIALIST'
     },
 
-    // Si el role es PATIENT, vinculamos a su registro médico
+    // CASO PATIENT: vinculamos a su registro médico
     patient_reference: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Patient',
         required: function () { return this.role === 'PATIENT'; }
     },
 
-    // Para el caso de asistentes o especialistas que colaboran
+    // CASO SPECIALIST: Sus pacientes y sus compartidos
+    my_patients: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Patient' }],
+    shared_patients: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Patient' }],
+
+    // CASO COLABORACIÓN: Para el caso de asistentes o especialistas que colaboran
     granted_access_to: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User' // Medicos o pacientes que le han otorgado permiso
